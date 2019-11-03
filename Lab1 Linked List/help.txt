@@ -1,0 +1,31 @@
+1. 
+
+Seems you pushed some commits from another machine?
+
+$ git pull
+$ git push
+
+If after the git pull a editor screen comes up, with a message saying "Merging ..." Then go ahead and save it.
+You will likely be in nano editor, so go Ctrl+x, y, enter
+
+2. 
+
+: Conflict
+! [rejected] ¶ó°í ¶ß¸éÀº
+
+There will be 
+>>>>>>>>>
+code version 1
+=======
+code version 2
+<<<<<<<<<
+
+in your list.c
+
+Select either code version A or B, and remove the other code, and the <<< ,>>> and the ===
+Then go 
+$ git add list.c
+$ git commit -m "Merged"
+$ git pull
+$ git push
+$ make handin

@@ -1,0 +1,59 @@
+int float_f2i(unsigned uf) {
+
+/* Special values
+
+consider EXP field in uf*/
+
+unsigned k = ((uf << 1) >> 1);
+
+unsigned n = (0xff << 23);
+
+unsigned m = (k^n);
+
+int exp=k>>23;
+
+if (!m) return 0x80000000u;
+
+ 
+
+/*Denormalized Values*/
+
+else if(!exp){
+
+return 0;
+
+}
+
+ 
+
+/*Normalized Values*/
+
+else{
+
+int bias = 127;
+
+int E = (exp - bias);
+
+int s = (uf >> 31);
+
+int M = (uf<<9)>>9;
+
+int result;
+
+if (E<0) result = 0;
+
+else if (E > 30) result = 0x80000000u;
+
+else if (E <= 23) result = (1<<E) + (M>> (23-E));
+
+else if (E > 23) result = (1<<E) + (M << (E-23));
+
+/*when uf is positive*/
+
+if (!s) return result;
+
+/*when uf is negative*/
+
+else return -result;}
+
+}
