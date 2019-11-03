@@ -1,0 +1,4 @@
+pjo336 -> X
+jonnyhsy -> "Cache.h" not found error
+lingz -> X
+psh -> X 가장 비슷하긴 함
