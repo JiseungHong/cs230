@@ -1,0 +1,59 @@
+sumstore:
+	pushq %rbx
+	movq %rdx, %rbx
+	call plus
+	movq %rax, (%rbx)
+	popq %rbx
+	ret
+
+switch_eg:
+	movq %rdx, %rcx
+	cmpq $6, %rdi # x:6
+	ja .L8
+	jmp *.L4(,%rdi,8)
+
+pcount_r:
+	movl $0, %eax
+	testq %rdi, %rdi
+	je .L6
+	pushq %rbx
+	movq %rdi, %rbx
+	andl $1, %ebx
+	shrq %rdi
+	call pcount_r
+	addq %rbx, %rax
+	popq %rbx
+.L6:
+	rep; ret
+
+<Array Access Basic>
+
+# %rdi= z
+# %rsi= digit
+	movl (%rdi,%rsi,4), %eax # z[digit]
+
+<Array Loop Basic>
+
+# %rdi= z
+	movl $0, %eax # i = 0
+	jmp .L3 # gotomiddle
+.L4: # loop:
+	addl $1, (%rdi,%rax,4) # z[i]++
+	addq $1, %rax # i++
+.L3: # middle
+	cmpq $4, %rax # i:4
+	jbe .L4 # if<=, gotoloop
+	rep; ret
+
+<Nested Array Access>
+
+	leaq (%rdi,%rdi,4), %rax # 5*index
+	addl %rax, %rsi # 5*index+dig
+	movl pgh(,%rsi,4), %eax # M[pgh+ 4*(5*index+dig)]
+
+<MultiLevel Array Access>
+
+	salq$2, %rsi # 4*digit
+	addq univ(,%rdi,8), %rsi # p = univ[index] + 4*digit
+	movl (%rsi), %eax # return *p
+	ret
