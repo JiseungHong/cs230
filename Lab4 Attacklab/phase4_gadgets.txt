@@ -1,0 +1,7 @@
+0000000000401a5e <addval_351>:
+  401a5e:	8d 87 28 45 c3 58    	lea    0x58c34528(%rdi),%eax
+  401a64:	c3                   	retq   
+
+0000000000401a43 <addval_292>:
+  401a43:	8d 87 48 89 c7 c3    	lea    -0x3c3876b8(%rdi),%eax
+  401a49:	c3                   	retq   
