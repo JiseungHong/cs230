@@ -1,0 +1,45 @@
+> job control : change back and forth, process state(running, stopped, terminated)
+SIGINT terminate, SIGSTP stop process -> SIGCONT
+jobs, bg, fg, kill ...
+
+"tsh> " is the prompt, when it is ready to read a command
+or needs more input.
+	1)built in command
+	2) or a path
+
+ctr-z,-c does nothing when there is no foreground job
+parseline & means background job
+prefix % means job ID (Not group id! 차이가 뭐지...???)
+tsh should reap 'all' of the zombies
+tsh should support quit/ jobs/ fg, bg <jobs>(SIGCONT)
+
+waitpid, kill, fork, execve, setpgid, sigprocmask, WUNTRACED, WNOHANG
+
+eval 에서 block SIGCHLD>fork>addjob at parent>unblock SIGCHLD> execute.
+
+> tshref is a reference solution. (결과값이 이와 같이 나오면 된다.)
+
+>setpgid(job control for signal handler use)
+Format
+#define _POSIX_SOURCE
+#include <unistd.h>
+
+int setpgid(pid_t pid, pid_t pgid);
+General description
+Sets the process group ID (PGID) of a process within the session of the calling process, so you can reassign a process to a different process group, or start a new process group with the specified process as its group leader.
+
+pid_t pid is the process ID (PID) of the process whose PGID you want to change. This must either be the caller of setpgid() or one of its children, and it must be in the caller's session. It cannot be the PID of a session leader. If pid is zero, the system uses the PID of the process calling setpgid().
+
+pid_t pgid is the new PGID you want to assign to the process identified by pid. If pgid indicates an existing process group, it must be in the caller's session. If pgid is zero, the system uses the PID of the process indicated by pid as the ID for the new process group. The new group is created in the caller's session.
+
+Returned value
+If successful, setpgid() returns 0.
+
+If unsuccessful, setpgid() returns -1 and sets errno
+
+> 이 부분이 job control 같은데 : 
+	Note:
+ * each child process must have a unique process group ID so that our
+ * background children 
+don't receive SIGINT (SIGTSTP) from the kernel
+ * when we type ctrl-c (ctrl-z) at the keyboard.  
